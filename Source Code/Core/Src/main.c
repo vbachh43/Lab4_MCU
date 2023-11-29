@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "scheduler.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -56,9 +57,22 @@ static void MX_GPIO_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void led_blink(){
-	   HAL_GPIO_TogglePin(LED_RED__GPIO_Port, LED_RED__Pin);
+void LED_RED_Blink(){
+	   HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
 }
+void LED_GREEN_Blink(){
+	   HAL_GPIO_TogglePin(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
+}
+void LED_YELLOW_Blink(){
+	   HAL_GPIO_TogglePin(LED_YELLOW_GPIO_Port, LED_YELLOW_Pin);
+}
+void LED_AQUA_Blink(){
+	   HAL_GPIO_TogglePin(LED_AQUA_GPIO_Port, LED_AQUA_Pin);
+}
+void Led_WHITE_Blink(){
+	   HAL_GPIO_TogglePin(LED_WHITE_GPIO_Port, LED_WHITE_Pin);
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -68,7 +82,12 @@ void led_blink(){
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	SCH_Add_Task(led_blink, 100, 200);
+	SCH_Add_Task(LED_RED_Blink, 100, 500);
+	SCH_Add_Task(LED_GREEN_Blink, 200, 500);
+	SCH_Add_Task(LED_YELLOW_Blink, 300, 500);
+	SCH_Add_Task(LED_AQUA_Blink, 400, 500);
+	SCH_Add_Task(Led_WHITE_Blink, 500, 500);
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -199,14 +218,17 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LED_RED__GPIO_Port, LED_RED__Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, LED_RED_Pin|LED_GREEN_Pin|LED_YELLOW_Pin|LED_AQUA_Pin
+                          |LED_WHITE_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : LED_RED__Pin */
-  GPIO_InitStruct.Pin = LED_RED__Pin;
+  /*Configure GPIO pins : LED_RED_Pin LED_GREEN_Pin LED_YELLOW_Pin LED_AQUA_Pin
+                           LED_WHITE_Pin */
+  GPIO_InitStruct.Pin = LED_RED_Pin|LED_GREEN_Pin|LED_YELLOW_Pin|LED_AQUA_Pin
+                          |LED_WHITE_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(LED_RED__GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 

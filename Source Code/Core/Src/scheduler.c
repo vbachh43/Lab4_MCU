@@ -6,6 +6,9 @@
  */
 
 #include "scheduler.h"
+#include "main.h"
+
+//extern TIM_HandleTypeDef htim2;
 
 sTask SCH_Tasks_G[SCH_MAX_TASKS];
 uint8_t current_index_task = 0;
@@ -15,6 +18,7 @@ void SCH_Init(void){
 }
 
 void SCH_Add_Task(void (*pFunction)(), uint32_t DELAY, uint32_t PERIOD){
+//	uint32_t tick = htim2.Init.Period;
 	if (current_index_task < SCH_MAX_TASKS){
 		SCH_Tasks_G[current_index_task].pTask = pFunction;
 		SCH_Tasks_G[current_index_task].Delay = DELAY;
@@ -44,6 +48,40 @@ void SCH_Dispatch_Tasks(void){
 		if (SCH_Tasks_G[i].RunMe > 0){
 			SCH_Tasks_G[i].RunMe--;
 			(*SCH_Tasks_G[i].pTask)();
+
+			if (SCH_Tasks_G[i].Period == 0){
+				SCH_Delete(i);
+			}
 		}
+	}
+}
+
+void SCH_Delete(uint32_t ID){
+	if (ID < 0 || ID > current_index_task){
+		return;
+	}
+//	else if (ID == current_index_task){
+//		SCH_Tasks_G[current_index_task].pTask = 0x0000;
+//		SCH_Tasks_G[current_index_task].Delay = 0;
+//		SCH_Tasks_G[current_index_task].Period = 0;
+//		SCH_Tasks_G[current_index_task].RunMe = 0;
+//
+//		SCH_Tasks_G[current_index_task].TaskID = 0;
+//	}
+	else if (ID < current_index_task){
+		for (int i = ID; i < current_index_task; i++){
+			SCH_Tasks_G[i].pTask = SCH_Tasks_G[i + 1].pTask;
+			SCH_Tasks_G[i].Delay = SCH_Tasks_G[i + 1].Delay;
+			SCH_Tasks_G[i].Period = SCH_Tasks_G[i + 1].Period;
+			SCH_Tasks_G[i].RunMe = SCH_Tasks_G[i + 1].RunMe;
+
+			SCH_Tasks_G[i].TaskID = SCH_Tasks_G[i+1].TaskID;
+		}
+		SCH_Tasks_G[current_index_task].pTask = 0x0000;
+		SCH_Tasks_G[current_index_task].Delay = 0;
+		SCH_Tasks_G[current_index_task].Period = 0;
+		SCH_Tasks_G[current_index_task].RunMe = 0;
+
+		SCH_Tasks_G[current_index_task].TaskID = 0;
 	}
 }
