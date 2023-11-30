@@ -83,5 +83,32 @@ void SCH_Delete(uint32_t ID){
 		SCH_Tasks_G[current_index_task].RunMe = 0;
 
 		SCH_Tasks_G[current_index_task].TaskID = 0;
+
+		current_index_task--;
 	}
+}
+
+void SCH_Report_Status ( void ) {
+# ifdef SCH_REPORT_ERRORS
+// ONLY APPLIES IF WE ARE REPORTING ERRORS
+// Check for a new error code
+  if ( Error_code_G != Last_error_code_G ) {
+	// Negative l o gic on LEDs assumed
+	Error_port = 255 − Error_code_G ;
+	Last_error_code_G = Error_code_G ;
+	if (Error_code_G != 0){
+		Error_tick_count_G = 60000;
+	}
+	else{
+		Error_tick_count_G = 0;
+	}
+  }
+  else {
+	if ( Error_tick_count_G != 0 ) {
+		if (−−Error_tick_count_G == 0 ) {
+			Error_code_G = 0; // Reset e r ro r code
+		}
+		}
+	}
+	#endif
 }

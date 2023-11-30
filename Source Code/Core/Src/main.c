@@ -20,7 +20,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "scheduler.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -69,8 +68,11 @@ void LED_YELLOW_Blink(){
 void LED_AQUA_Blink(){
 	   HAL_GPIO_TogglePin(LED_AQUA_GPIO_Port, LED_AQUA_Pin);
 }
-void Led_WHITE_Blink(){
+void LED_WHITE_Blink(){
 	   HAL_GPIO_TogglePin(LED_WHITE_GPIO_Port, LED_WHITE_Pin);
+}
+void ONE_SHOT_Blink(){
+	HAL_GPIO_TogglePin(ONE_SHOT_GPIO_Port, ONE_SHOT_Pin);
 }
 
 /* USER CODE END 0 */
@@ -82,11 +84,12 @@ void Led_WHITE_Blink(){
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	SCH_Add_Task(LED_RED_Blink, 100, 500);
-	SCH_Add_Task(LED_GREEN_Blink, 200, 500);
-	SCH_Add_Task(LED_YELLOW_Blink, 300, 500);
-	SCH_Add_Task(LED_AQUA_Blink, 400, 500);
-	SCH_Add_Task(Led_WHITE_Blink, 500, 500);
+	SCH_Add_Task(LED_RED_Blink, 100, 50);
+	SCH_Add_Task(LED_GREEN_Blink, 200, 100);
+	SCH_Add_Task(LED_YELLOW_Blink, 300, 150);
+	SCH_Add_Task(LED_AQUA_Blink, 400, 200);
+	SCH_Add_Task(LED_WHITE_Blink, 500, 250);
+	SCH_Add_Task(ONE_SHOT_Blink, 600, 0);
 
   /* USER CODE END 1 */
 
@@ -219,12 +222,12 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, LED_RED_Pin|LED_GREEN_Pin|LED_YELLOW_Pin|LED_AQUA_Pin
-                          |LED_WHITE_Pin, GPIO_PIN_RESET);
+                          |LED_WHITE_Pin|ONE_SHOT_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : LED_RED_Pin LED_GREEN_Pin LED_YELLOW_Pin LED_AQUA_Pin
-                           LED_WHITE_Pin */
+                           LED_WHITE_Pin ONE_SHOT_Pin */
   GPIO_InitStruct.Pin = LED_RED_Pin|LED_GREEN_Pin|LED_YELLOW_Pin|LED_AQUA_Pin
-                          |LED_WHITE_Pin;
+                          |LED_WHITE_Pin|ONE_SHOT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
